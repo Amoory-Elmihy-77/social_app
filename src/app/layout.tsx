@@ -5,6 +5,8 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { Roboto } from 'next/font/google';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../theme';
+import ReduxProvider from "@/components/ReduxProvider/ReduxProvider";
+import Navbar from "@/components/Navbar/Navbar";
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
   subsets: ['latin'],
@@ -39,7 +41,10 @@ export default function RootLayout({
         options={{ key: 'css' }}
         >
           <ThemeProvider theme={theme}>
-            {children}
+            <ReduxProvider>
+              <Navbar />
+              {children}
+            </ReduxProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
