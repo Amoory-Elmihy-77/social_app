@@ -1,5 +1,6 @@
 export type postsState = {
   posts: null | Post[];
+  singlePost: null | Post;
 };
 
 export interface ApiResponse {

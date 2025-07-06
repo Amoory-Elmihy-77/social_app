@@ -19,6 +19,7 @@ import CommentCard from "../CommentCard/CommentCard";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Link from "next/link";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -48,7 +49,13 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   ],
 }));
 
-export default function PostCard({ postDetails }: { postDetails: Post }) {
+export default function PostCard({
+  postDetails,
+  showAllComments = false,
+}: {
+  postDetails: Post;
+  showAllComments: boolean;
+}) {
   return (
     <Card sx={{ maxWidth: "85%", mx: "auto", mb: 3, p: 3 }}>
       <CardHeader
@@ -93,12 +100,24 @@ export default function PostCard({ postDetails }: { postDetails: Post }) {
         </IconButton>
       </CardActions>
       <Divider sx={{ mb: 2 }}>Comments</Divider>
-      {postDetails.comments.length > 0 && (
+      {postDetails.comments.length > 0 && !showAllComments && (
         <CommentCard commentDetails={postDetails.comments[0]} />
       )}
-      <Button variant="outlined" fullWidth sx={{ mt: 2 }}>
-        Show more comments
-      </Button>
+      {postDetails.comments.length > 1 &&
+        showAllComments &&
+        postDetails.comments.map((comment) => (
+          <CommentCard key={comment._id} commentDetails={comment} />
+        ))}
+      {!showAllComments && (
+        <Button variant="outlined" fullWidth sx={{ mt: 2 }}>
+          <Link
+            style={{ color: "inherit", textDecoration: "none" }}
+            href={`/post/${postDetails._id}`}
+          >
+            Show more comments
+          </Link>
+        </Button>
+      )}
       <TextField
         multiline
         fullWidth

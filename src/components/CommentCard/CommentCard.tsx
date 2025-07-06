@@ -19,7 +19,9 @@ export default function CommentCard({
   }
   return (
     <>
-      <Box sx={{ bgcolor: "#f0f0f0", px: 3, pb: 2, borderRadius: "8px" }}>
+      <Box
+        sx={{ bgcolor: "#f0f0f0", px: 3, pb: 2, borderRadius: "8px", mb: 2 }}
+      >
         <CardHeader
           avatar={
             <Image

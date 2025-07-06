@@ -5,6 +5,7 @@ import { RootState } from "../store";
 
 const initialState: postsState = {
   posts: null,
+  singlePost: null,
 };
 
 export const getAllPosts = createAsyncThunk(
@@ -24,6 +25,23 @@ export const getAllPosts = createAsyncThunk(
     return data.posts;
   }
 );
+export const getSinglePost = createAsyncThunk(
+  "posts/getSinglePost",
+  async (id: string, { getState }) => {
+    const state: RootState = getState();
+    const token = state.userReducer.token;
+    const options = {
+      url: `https://linked-posts.routemisr.com/posts/${id}`,
+      method: "GET",
+      headers: {
+        //   token: localStorage.getItem("token"),
+        token,
+      },
+    };
+    const { data } = await axios.request(options);
+    return data.post;
+  }
+);
 
 export const postsSlice = createSlice({
   name: "posts",
@@ -36,6 +54,16 @@ export const postsSlice = createSlice({
       state.posts = action.payload;
     });
     builder.addCase(getAllPosts.rejected, (state, action) => {
+      console.log("not okk");
+      console.log({ state, action });
+    });
+
+    builder.addCase(getSinglePost.fulfilled, (state, action) => {
+      console.log("okk");
+      console.log({ state, action });
+      state.singlePost = action.payload;
+    });
+    builder.addCase(getSinglePost.rejected, (state, action) => {
       console.log("not okk");
       console.log({ state, action });
     });
