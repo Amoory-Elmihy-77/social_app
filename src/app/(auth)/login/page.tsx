@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import { login } from "@/store/features/user.slice";
 import { useAppDispatch } from "@/hooks/store.hooks";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Login() {
   const router = useRouter();
@@ -52,6 +53,12 @@ export default function Login() {
             <Button type="submit" variant="contained">
               Login
             </Button>
+            <Link
+              style={{ width: "100%", textAlign: "center", color: "#1776D2" }}
+              href="/signup"
+            >
+              Create new Account ?
+            </Link>
           </form>
         </Paper>
       </Box>
