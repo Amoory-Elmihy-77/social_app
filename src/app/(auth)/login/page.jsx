@@ -27,7 +27,7 @@ export default function Login() {
   });
   return (
     <>
-      <Box sx={{ p: 2, mt: 3, mx: "auto", maxwidth: 600 }}>
+      <Box sx={{ p: 2, mt: 3, mx: "auto", width: { xs: "90%", md: 600 } }}>
         <Paper elevation={6} sx={{ p: 5 }}>
           <form
             onSubmit={formik.handleSubmit}
