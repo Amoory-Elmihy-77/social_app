@@ -11,7 +11,7 @@ const initialState: postsState = {
 export const getAllPosts = createAsyncThunk(
   "posts/getPosts",
   async (_, { getState }) => {
-    const state: RootState = getState();
+    const state = getState() as RootState;
     const token = state.userReducer.token;
     const options = {
       url: `https://linked-posts.routemisr.com/posts?limit=50`,
@@ -28,7 +28,7 @@ export const getAllPosts = createAsyncThunk(
 export const getSinglePost = createAsyncThunk(
   "posts/getSinglePost",
   async (id: string, { getState }) => {
-    const state: RootState = getState();
+    const state = getState() as RootState;
     const token = state.userReducer.token;
     const options = {
       url: `https://linked-posts.routemisr.com/posts/${id}`,

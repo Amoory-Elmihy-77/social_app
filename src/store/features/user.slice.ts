@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 
 const initialState: userState = {
-  token: localStorage.getItem("token"),
+  token: typeof window !== "undefined" ? localStorage.getItem("token") : null,
 };
 
 export const login = createAsyncThunk(
@@ -27,7 +27,9 @@ const userSlice = createSlice({
   extraReducers: function (builder) {
     builder.addCase(login.fulfilled, (state, action) => {
       state.token = action.payload.token;
-      localStorage.setItem("token", action.payload.token);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("token", action.payload.token);
+      }
       toast.success("Welcome Back");
     });
     builder.addCase(login.rejected, (state, action) => {

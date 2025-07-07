@@ -2,6 +2,7 @@
 
 import Loading from "@/components/Loading/Loading";
 import PostCard from "@/components/PostCard/PostCard";
+import PostForm from "@/components/PostForm/PostForm";
 import { useAppDispatch, useAppselector } from "@/hooks/store.hooks";
 import { getAllPosts } from "@/store/features/posts.slice";
 import Grid from "@mui/material/Grid";
@@ -21,6 +22,7 @@ export default function Home() {
       <Grid container sx={{ mt: 3 }}>
         <Grid size={3}></Grid>
         <Grid size={6} sx={{ p: 3 }}>
+          <PostForm />
           {posts ? (
             posts.map((post) => <PostCard key={post._id} postDetails={post} />)
           ) : (

@@ -1,13 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
@@ -21,40 +20,12 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Link from "next/link";
 
-interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
-}
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme }) => ({
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-  variants: [
-    {
-      props: ({ expand }) => !expand,
-      style: {
-        transform: "rotate(0deg)",
-      },
-    },
-    {
-      props: ({ expand }) => !!expand,
-      style: {
-        transform: "rotate(180deg)",
-      },
-    },
-  ],
-}));
-
 export default function PostCard({
   postDetails,
   showAllComments = false,
 }: {
   postDetails: Post;
-  showAllComments: boolean;
+  showAllComments?: boolean;
 }) {
   return (
     <Card sx={{ maxWidth: "85%", mx: "auto", mb: 3, p: 3 }}>
@@ -108,7 +79,7 @@ export default function PostCard({
         postDetails.comments.map((comment) => (
           <CommentCard key={comment._id} commentDetails={comment} />
         ))}
-      {!showAllComments && (
+      {!showAllComments && postDetails.comments.length > 1 && (
         <Button variant="outlined" fullWidth sx={{ mt: 2 }}>
           <Link
             style={{ color: "inherit", textDecoration: "none" }}
