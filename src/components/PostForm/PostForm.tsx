@@ -59,9 +59,11 @@ export default function PostForm() {
         <Box
           sx={{
             display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
             justifyContent: "space-between",
             alignItems: "center",
             mt: 2,
+            gap: { xs: 2, lg: 4 },
           }}
         >
           <Button
@@ -70,6 +72,7 @@ export default function PostForm() {
             variant="contained"
             tabIndex={-1}
             startIcon={<CloudUploadIcon />}
+            fullWidth
           >
             Upload files
             <VisuallyHiddenInput
@@ -82,6 +85,7 @@ export default function PostForm() {
             variant="contained"
             endIcon={<SendIcon />}
             onClick={createPost}
+            fullWidth
           >
             Post
           </Button>

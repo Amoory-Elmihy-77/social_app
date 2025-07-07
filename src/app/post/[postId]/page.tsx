@@ -23,7 +23,7 @@ export default function PostDetails({
   return (
     <Grid container sx={{ pt: 5 }}>
       <Grid size={3}></Grid>
-      <Grid size={6}>
+      <Grid size={{ xs: 12, md: 6 }}>
         {singlePost ? (
           <PostCard postDetails={singlePost} showAllComments={true} />
         ) : (

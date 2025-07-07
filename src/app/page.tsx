@@ -21,7 +21,7 @@ export default function Home() {
     <>
       <Grid container sx={{ mt: 3 }}>
         <Grid size={3}></Grid>
-        <Grid size={6} sx={{ p: 3 }}>
+        <Grid size={{ xs: 12, md: 6 }} sx={{ p: 3 }}>
           <PostForm />
           {posts ? (
             posts.map((post) => <PostCard key={post._id} postDetails={post} />)
