@@ -336,8 +336,8 @@ const handleChangePassword = async (
           />
         </CardActions>
         {
-          userPosts.map((post)=>{
-            return <PostCard key={post._id} postDetails={post} onDelete={handleDeletePost} />
+          userPosts.map((post) => {
+            return <PostCard key={post._id} postDetails={post} onDelete={handleDeletePost} onCommentChanged={fetchUserPosts} />
           })
         }
       </Card>

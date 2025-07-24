@@ -20,16 +20,55 @@ import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Link from "next/link";
+import { useAppselector } from "@/hooks/store.hooks";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 export default function PostCard({
   postDetails,
   showAllComments = false,
   onDelete,
+  onCommentChanged,
 }: {
   postDetails: Post;
   showAllComments?: boolean;
   onDelete?: (postId: string) => void;
+  onCommentChanged?: () => void;
 }) {
+  const { token } = useAppselector((store) => store.userReducer);
+  const [commentContent, setCommentContent] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function handleAddComment() {
+    if (!commentContent.trim()) return;
+    setIsSubmitting(true);
+    try {
+      const response = await axios.post(
+        "https://linked-posts.routemisr.com/comments",
+        {
+          content: commentContent,
+          post: postDetails._id,
+        },
+        {
+          headers: { token },
+        }
+      );
+      if (response.data.message === "success") {
+        toast.success("Comment added!");
+        
+        setCommentContent("");
+      } else {
+        toast.error("Failed to add comment");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Error adding comment");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <Card sx={{ maxWidth: "85%", mx: "auto", mb: 3, p: 3 }}>
       <CardHeader
@@ -82,12 +121,12 @@ export default function PostCard({
       </CardActions>
       <Divider sx={{ mb: 2 }}>Comments</Divider>
       {postDetails.comments.length > 0 && !showAllComments && (
-        <CommentCard commentDetails={postDetails.comments[0]} />
+        <CommentCard commentDetails={postDetails.comments[0]} onCommentUpdated={onCommentChanged} />
       )}
       {postDetails.comments.length > 1 &&
         showAllComments &&
         postDetails.comments.map((comment) => (
-          <CommentCard key={comment._id} commentDetails={comment} />
+          <CommentCard key={comment._id} commentDetails={comment} onCommentUpdated={onCommentChanged} />
         ))}
       {!showAllComments && postDetails.comments.length > 1 && (
         <Button variant="outlined" fullWidth sx={{ mt: 2 }}>
@@ -105,7 +144,19 @@ export default function PostCard({
         minRows={2}
         placeholder="add your comment ..."
         sx={{ mt: 2 }}
+        value={commentContent}
+        onChange={e => setCommentContent(e.target.value)}
+        disabled={isSubmitting}
       />
+      <Button
+        variant="contained"
+        sx={{ mt: 1, mb: 2 }}
+        onClick={handleAddComment}
+        disabled={isSubmitting || !commentContent.trim()}
+        fullWidth
+      >
+        {isSubmitting ? "Posting..." : "Add Comment"}
+      </Button>
     </Card>
   );
 }
