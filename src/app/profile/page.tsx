@@ -18,6 +18,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
+import { Post } from "@/types/posts.types";
+import PostCard from "@/components/PostCard/PostCard";
 
 // Define the user profile type
 interface UserProfile {
@@ -32,8 +34,10 @@ interface UserProfile {
 
 const ProfilePage = () => {
   const ProfileUrl = `https://linked-posts.routemisr.com/users/profile-data`;
+  const CommentsUrl = `https://linked-posts.routemisr.com/users/664bcf3e33da217c4af21f00/posts?limit=2`;
   const { token } = useAppselector((store) => store.userReducer);
   const [profileData, setProfileData] = useState<UserProfile | null>(null);
+  const [userPosts, setUserPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
@@ -59,10 +63,29 @@ const ProfilePage = () => {
       setLoading(false);
     }
   };
+  const fetchUserPosts = async () =>{
+    setLoading(true);
+    try {
+      const { data } = await axios.request({
+        url: CommentsUrl,
+        method: "GET",
+        headers: {
+          token,
+        },
+      });
+      console.log(data);
+      setUserPosts(data.posts);
+    } catch (err) {
+      console.log(err);
+      setUserPosts([]);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     fetchProfileData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchUserPosts();
   }, [token]);
 
   // Handle photo upload
@@ -133,6 +156,27 @@ const handleChangePassword = async (
     }
   }
 };
+
+  // Delete post handler
+  const handleDeletePost = async (postId: string) => {
+    if (!token) {
+      toast.error("Not authenticated");
+      return;
+    }
+    try {
+      await axios.delete(`https://linked-posts.routemisr.com/posts/${postId}`, {
+        headers: { token },
+      });
+      setUserPosts((prev) => prev.filter((post) => post._id !== postId));
+      toast.success("Post deleted successfully");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        toast.error(err?.response?.data?.message || "Failed to delete post");
+      } else {
+        toast.error("Failed to delete post");
+      }
+    }
+  };
 
   const onUploadPhotoClick = () => {
     fileInputRef.current?.click();
@@ -291,6 +335,11 @@ const handleChangePassword = async (
             onChange={onFileChange}
           />
         </CardActions>
+        {
+          userPosts.map((post)=>{
+            return <PostCard key={post._id} postDetails={post} onDelete={handleDeletePost} />
+          })
+        }
       </Card>
       {/* Change Password Dialog */}
       <Dialog open={openPasswordDialog} onClose={handleClosePasswordDialog}>

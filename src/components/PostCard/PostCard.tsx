@@ -12,6 +12,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import CommentIcon from "@mui/icons-material/Comment";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Post } from "@/types/posts.types";
 import Image from "next/image";
 import CommentCard from "../CommentCard/CommentCard";
@@ -23,9 +24,11 @@ import Link from "next/link";
 export default function PostCard({
   postDetails,
   showAllComments = false,
+  onDelete,
 }: {
   postDetails: Post;
   showAllComments?: boolean;
+  onDelete?: (postId: string) => void;
 }) {
   return (
     <Card sx={{ maxWidth: "85%", mx: "auto", mb: 3, p: 3 }}>
@@ -39,9 +42,16 @@ export default function PostCard({
           />
         }
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
+          <>
+            {onDelete && (
+              <IconButton aria-label="delete" onClick={() => onDelete(postDetails._id)}>
+                <DeleteIcon />
+              </IconButton>
+            )}
+            <IconButton aria-label="settings">
+              <MoreVertIcon />
+            </IconButton>
+          </>
         }
         title={postDetails.user.name}
         subheader={new Date(postDetails.createdAt).toLocaleDateString()}
